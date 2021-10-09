@@ -1,8 +1,13 @@
 package com.gocity.leisure.pass.repository;
 
-import com.gocity.leisure.pass.db.entities.Product;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import java.util.List;
 
-public interface ProductRepository extends PagingAndSortingRepository<Product, Integer> {
+import com.gocity.leisure.pass.entities.Product;
+import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
+public interface ProductRepository extends CrudRepository<Product, Integer> {
+    List<Product> findAllByCategoryId(Integer categoryId);
+    List<Product> findAll();
 }
