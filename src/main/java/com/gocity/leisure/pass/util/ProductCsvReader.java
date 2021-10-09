@@ -45,14 +45,14 @@ public class ProductCsvReader {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm");
         // check date for number of chars to first slash append 0.
         String day = date.substring(0, date.indexOf('/'));
-        if(day.length() == 1) {
-            date = "0"+date;
+        if (day.length() == 1) {
+            date = "0" + date;
         }
-        int ndx =date.indexOf(' ');
-        String datePart = date.substring(0,ndx);
+        int ndx = date.indexOf(' ');
+        String datePart = date.substring(0, ndx);
         String hours = date.substring(ndx).trim();
-        if(hours.length() == 4) {
-            date = datePart+" "+"0"+hours;
+        if (hours.length() == 4) {
+            date = datePart + " " + "0" + hours;
         }
         // check the hours after the space prepend a 0
         return LocalDateTime.parse(date, format);

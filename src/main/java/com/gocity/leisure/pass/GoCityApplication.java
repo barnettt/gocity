@@ -1,19 +1,16 @@
-package com.gocity;
+package com.gocity.leisure.pass;
 
 
 import com.gocity.leisure.pass.util.LoadProductTable;
 import com.gocity.leisure.pass.util.ProductCsvReader;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
-@SpringBootApplication(
-        scanBasePackages = {"com.gocity.leisure.pass.repository",
-                "com.gocity.leisure.pass.entities"
-        }
-
-)
+@SpringBootApplication()
 public class GoCityApplication {
 
     public static void main(String[] args) {
@@ -31,5 +28,12 @@ public class GoCityApplication {
     @Bean
     public LoadProductTable loadProductTable() {
         return new LoadProductTable();
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+        return mapper;
     }
 }

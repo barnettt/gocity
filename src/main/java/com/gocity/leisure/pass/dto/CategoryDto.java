@@ -11,13 +11,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDto {
+public class CategoryDto {
+
     Integer id;
-    String name;
-    String description;
-    int categoryId;
+    String categoryName;
     LocalDateTime creationDate;
-    LocalDateTime updatedDate;
-    LocalDateTime lastPurchasedDate;
-    CategoryDto category;
 }
