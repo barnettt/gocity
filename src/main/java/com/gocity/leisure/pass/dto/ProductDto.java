@@ -23,7 +23,8 @@ public class ProductDto {
     private CategoryDto category;
 
     public static void validate(ProductDto dto) throws GoCityLastPurchaseDateException {
-        dto.getLastPurchasedDate().isBefore(dto.getCreationDate());
-        throw new GoCityLastPurchaseDateException();
+       if (dto.getLastPurchasedDate().isBefore(dto.getCreationDate())) {
+           throw new GoCityLastPurchaseDateException();
+       }
     }
 }

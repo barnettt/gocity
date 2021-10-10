@@ -64,6 +64,7 @@ class LeisurePassControllerTest extends GoCityServiceTestParent {
         when(goCityProductService.retrieveAllProduct()).thenReturn(getProductDtoList(dateTime));
         when(goCityProductService.retrieveProductsByCategory(3)).thenReturn(getProductDtoList(dateTime));
         when(goCityProductService.updateProduct(any())).thenReturn(getGoCityProduct());
+        when(goCityProductService.sortProductsByName()).thenReturn(getProductDtoList(dateTime));
 
         ProductDto productDto = getGoCityProduct();
         productDto.setId(null);
@@ -74,7 +75,7 @@ class LeisurePassControllerTest extends GoCityServiceTestParent {
 
     @DisplayName("I want to see all products")
     @Test
-    void shouldReturnAllProductsToClient() throws Exception {
+    void shouldReturnAllProducts() throws Exception {
 
         String result = mvc.perform(get("/gocity/v1.0/products")
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
@@ -85,6 +86,21 @@ class LeisurePassControllerTest extends GoCityServiceTestParent {
         List<Product> products = mapper.readValue(result, typeRef);
         assertThat(products.size(), is(EXPECTED_RETURN_COUNT));
     }
+
+    @DisplayName("I want to sort products")
+    @Test
+    void shouldReturnSortedProducts() throws Exception {
+
+        String result = mvc.perform(get("/gocity/v1.0/products/sort")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andReturn()
+                .getResponse().getContentAsString();
+        TypeReference<ArrayList<Product>> typeRef = new TypeReference<>() {
+        };
+        List<Product> products = mapper.readValue(result, typeRef);
+        assertThat(products.size(), is(EXPECTED_RETURN_COUNT));
+    }
+
 
     @DisplayName("I want to see products by category")
     @Test

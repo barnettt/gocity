@@ -58,4 +58,10 @@ public class LeisurePassController {
     public ProductDto addProduct(@RequestBody ProductDto productDto) {
         return goCityProductService.addProduct(productDto);
     }
+
+    @GetMapping(value = "/products/sort", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<ProductDto> sortProducts() {
+        return goCityProductService.sortProductsByName();
+    }
 }

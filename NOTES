@@ -14,11 +14,15 @@ the product table from the csv file.
 6) In reality, we should add flyway to the build process and let jenkins run it, but
 for this exercise i'll let spring boot do it. On start up, ill load the product csv data
 we need to do some format around the date as Excel is well known for mangling date fields.
-7) I'll configure a mysql database for the product inserts and do the dta insert via code.
+7) I'll configure a mysql database for the product inserts and do the data insert via code.
 (I dont want to tamper with the spreadsheet)
 we only want the product data load to execute once, so ill add a property that can be set to prevent the data
 load occurring multiple times.
 8) "spring.main.allow-bean-definition-overriding=true" not working as expected.
 9) ** Assuming that sort by name is a call to all products with a sort by name request added
 The sorting could be done in the UI, but will add a method in the service to retrieve and sort
+10) Added rest assured for integration testing, I know that there are some other test cases that could and should be added
+but for the time i think it a day on this.
+
+
 
