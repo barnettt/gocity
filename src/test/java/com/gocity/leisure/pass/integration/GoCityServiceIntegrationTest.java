@@ -1,4 +1,4 @@
-package com.gocity.leisure.pass.service;
+package com.gocity.leisure.pass.integration;
 
 import static org.junit.jupiter.api.Assertions.assertLinesMatch;
 import static org.mockito.Mockito.when;
@@ -9,9 +9,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.gocity.leisure.pass.dto.ProductDto;
+import com.gocity.leisure.pass.entities.Category;
 import com.gocity.leisure.pass.entities.Product;
 import com.gocity.leisure.pass.repository.CategoryRepository;
 import com.gocity.leisure.pass.repository.ProductRepository;
+import com.gocity.leisure.pass.service.GoCityProductService;
+import com.gocity.leisure.pass.service.GoCityServiceTestParent;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @ExtendWith(MockitoExtension.class)
-@SpringBootTest()
+@SpringBootTest
 class GoCityServiceIntegrationTest extends GoCityServiceTestParent {
 
 
@@ -70,14 +73,15 @@ class GoCityServiceIntegrationTest extends GoCityServiceTestParent {
 
     private List<Product> addExtraProducts(LocalDateTime dateTime) {
         List<Product> products = new ArrayList<>();
+        Category category = new Category(3, "test category", dateTime);
         Product prod1 = new Product("3", "GoCity Bad Product",
-                "Gives super powers to the one drinks it", "3", dateTime, dateTime, dateTime);
+                "Gives super powers to the one drinks it", "3", dateTime, dateTime, dateTime, category);
         Product prod2 = new Product("3", "GoCity Useless Product",
-                "Gives super powers to the one drinks it", "3", dateTime, dateTime, dateTime);
+                "Gives super powers to the one drinks it", "3", dateTime, dateTime, dateTime, category);
         Product prod3 = new Product("3", "GoCity Good Product",
-                "Gives super powers to the one drinks it", "3", dateTime, dateTime, dateTime);
+                "Gives super powers to the one drinks it", "3", dateTime, dateTime, dateTime, category);
         Product prod4 = new Product("3", "GoCity Nice Product",
-                "Gives super powers to the one drinks it", "3", dateTime, dateTime, dateTime);
+                "Gives super powers to the one drinks it", "3", dateTime, dateTime, dateTime, category);
         products.add(prod1);
         products.add(prod2);
         products.add(prod3);

@@ -31,26 +31,29 @@ public class Product {
     @NotNull
     @Max(128)
     String description;
+    @Column(name = "category_id" , updatable = false)
     int categoryId;
     @Column(name = "CREATION_DATE")
     LocalDateTime creationDate;
-    @Column(name = "UPDATED_DATE")
+    @Column(name = "UPDATE_DATE")
     LocalDateTime updatedDate;
     @Column(name = "LAST_PURCHASED_DATE")
     LocalDateTime lastPurchasedDate;
-    @JoinColumn(name = "id", insertable = false, updatable = false)
+    @JoinColumn( referencedColumnName = "id", insertable = false, updatable = false)
     @OneToOne(fetch = FetchType.LAZY)
-    @MapsId
     Category category;
 
-    public Product(final String productId, final String name, String description, final String categoryId, final LocalDateTime creationDate, final LocalDateTime updatedDate, final LocalDateTime lastPurchasedDate) {
-        this.id = Integer.valueOf(productId);
+    public Product(final String productId, final String name, String description, final String categoryId,
+                   final LocalDateTime creationDate, final LocalDateTime updatedDate,
+                   final LocalDateTime lastPurchasedDate, Category category) {
+        this.id = productId != null ? Integer.parseInt(productId) : null;
         this.name = name;
         this.description = description;
-        this.categoryId = Integer.parseInt(categoryId);
+        this.categoryId = categoryId != null ? Integer.parseInt(categoryId) : null;
         this.creationDate = creationDate;
         this.updatedDate = updatedDate;
         this.lastPurchasedDate = lastPurchasedDate;
+        this.category = category;
     }
 
 }

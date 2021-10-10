@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CategoryDto {
 
-    Integer id;
-    String categoryName;
-    LocalDateTime creationDate;
+    private Integer id;
+    private String categoryName;
+    private LocalDateTime creationDate;
 }

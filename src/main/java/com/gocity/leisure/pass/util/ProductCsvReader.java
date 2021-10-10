@@ -9,6 +9,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gocity.leisure.pass.entities.Category;
 import com.gocity.leisure.pass.entities.Product;
 import com.opencsv.CSVReader;
 
@@ -36,9 +37,10 @@ public class ProductCsvReader {
     }
 
     private static Product getProduct(final String[] productData) {
+        Category category = new Category(3, "test category", LocalDateTime.now());
         return new Product(productData[0], productData[1], productData[2],
                 productData[3], formatDate(productData[4]), formatDate(productData[5]),
-                formatDate(productData[6]));
+                formatDate(productData[6]), category);
     }
 
     private static LocalDateTime formatDate(String date) {

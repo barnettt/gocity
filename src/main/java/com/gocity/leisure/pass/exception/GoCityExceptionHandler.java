@@ -17,7 +17,8 @@ public class GoCityExceptionHandler extends ResponseEntityExceptionHandler {
             = {IllegalArgumentException.class, IllegalStateException.class})
     protected ResponseEntity<Object> handleInternalServer(
             RuntimeException ex, WebRequest request) {
-        String bodyOfResponse = "Unknown server error";
+        String bodyOfResponse = "Unknown server error: " + ex.getMessage();
+        log.error(ex.getMessage(), ex);
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
@@ -27,6 +28,7 @@ public class GoCityExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleProductNotFound(
             RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "Product Not found";
+        log.error(ex.getMessage());
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
@@ -36,8 +38,21 @@ public class GoCityExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleCategoryNotFound(
             RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "Category Not found";
+        log.error(ex.getMessage());
         return handleExceptionInternal(ex, bodyOfResponse,
                 new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
+
+    @ExceptionHandler(value
+            = {GoCityLastPurchaseDateException.class})
+    protected ResponseEntity<Object> handlePurchaseDate(
+            RuntimeException ex, WebRequest request) {
+        String bodyOfResponse = "Purchase date before creation date";
+        log.error(ex.getMessage());
+        return handleExceptionInternal(ex, bodyOfResponse,
+                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+
 }
 

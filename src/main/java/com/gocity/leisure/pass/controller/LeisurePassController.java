@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -41,6 +42,7 @@ public class LeisurePassController {
     @PostMapping(value = "/products/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     public ProductDto updateProduct(@PathVariable int id, @RequestBody ProductDto product) {
+        ProductDto.validate(product);
         product.setId(id);
         return goCityProductService.updateProduct(product);
     }
@@ -49,5 +51,11 @@ public class LeisurePassController {
     @ResponseBody
     public void deleteProduct(@PathVariable int id) {
         goCityProductService.deleteProduct(id);
+    }
+
+    @PutMapping(value = "/products", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ProductDto addProduct(@RequestBody ProductDto productDto) {
+        return goCityProductService.addProduct(productDto);
     }
 }

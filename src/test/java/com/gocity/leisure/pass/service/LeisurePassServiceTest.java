@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
@@ -79,14 +81,14 @@ class LeisurePassServiceTest extends GoCityServiceTestParent {
         product.setName("test update product");
         expected.setName(product.getName());
         when(categoryRepository.findById(anyInt())).thenReturn(
-                Optional.of(new Category(25, "test category", dateTime)));
+                Optional.of(new Category(5, "test category", dateTime)));
         when(repository.save(any())).thenReturn(product);
         when(mapper.map(any(), any())).thenReturn(expected);
         ProductDto returnedProduct = service.updateProduct(expected);
         assertEquals(expected, returnedProduct);
     }
 
-    @DisplayName("Update products")
+    @DisplayName("Throw category not found error")
     @Test
     void shouldThrowCategoryNotFoundException() {
         LocalDateTime dateTime = LocalDateTime.now();
@@ -105,5 +107,33 @@ class LeisurePassServiceTest extends GoCityServiceTestParent {
         );
         assertEquals("Category not found", ex.getMessage());
     }
+
+    @DisplayName("Should Delete product")
+    @Test
+    void shouldDeleteProduct() {
+        LocalDateTime dateTime = LocalDateTime.now();
+        List<Product> products = getProductList(dateTime);
+        repository.delete(products.get(0));
+        verify(repository, times(1)).delete(products.get(0));
+    }
+
+    @DisplayName("Add new products")
+    @Test
+    void shouldAddProduct() {
+        LocalDateTime dateTime = LocalDateTime.now();
+        List<Product> products = getProductList(dateTime);
+        List<ProductDto> expectedList = getProductDtoList(dateTime);
+        ProductDto expected = expectedList.get(0);
+        Product product = products.get(0);
+        product.setName("test add new product");
+        expected.setName(product.getName());
+        when(repository.save(any())).thenReturn(product);
+        when(categoryRepository.findById(anyInt())).thenReturn(Optional.of(product.getCategory()));
+        when(mapper.map(any(), any())).thenReturn(expected);
+        ProductDto returnedProduct = service.addProduct(expected);
+        assertEquals(expected, returnedProduct);
+        verify(repository, times(1)).save(any());
+    }
+
 
 }

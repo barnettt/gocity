@@ -8,10 +8,12 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -62,6 +64,12 @@ class LeisurePassControllerTest extends GoCityServiceTestParent {
         when(goCityProductService.retrieveAllProduct()).thenReturn(getProductDtoList(dateTime));
         when(goCityProductService.retrieveProductsByCategory(3)).thenReturn(getProductDtoList(dateTime));
         when(goCityProductService.updateProduct(any())).thenReturn(getGoCityProduct());
+
+        ProductDto productDto = getGoCityProduct();
+        productDto.setId(null);
+        productDto.setName("New product");
+        productDto.setDescription("Testing add new product");
+        when(goCityProductService.addProduct(any())).thenReturn(productDto);
     }
 
     @DisplayName("I want to see all products")
@@ -101,6 +109,7 @@ class LeisurePassControllerTest extends GoCityServiceTestParent {
                 .andExpect(result -> assertEquals(PRODUCTS_NOT_FOUND, Objects.requireNonNull(result.getResolvedException()).getMessage()));
     }
 
+    @DisplayName("I want to be able to update a product")
     @Test
     void shouldUpdateProduct() throws Exception {
         String json = mapper.writeValueAsString(getGoCityProduct());
@@ -113,11 +122,44 @@ class LeisurePassControllerTest extends GoCityServiceTestParent {
                 .andExpect(jsonPath("$.name", is("GoCity Super Product")));
     }
 
+    @DisplayName("I want to be able to delete a product")
     @Test
     void shouldDeleteProduct() throws Exception {
         mvc.perform(delete("/gocity/v1.0/products/{id}", EXPECTED_RETURN_PRODUCT_ID)
                         .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk());
+    }
+
+    @DisplayName("I want to be able to Add a new product")
+    @Test
+    void shouldAddNewProduct() throws Exception {
+        ProductDto productDto = getGoCityProduct();
+        productDto.setId(null);
+        productDto.setName("New product");
+        productDto.setDescription("Testing add new product");
+        String json = mapper.writeValueAsString(productDto);
+        mvc.perform(put("/gocity/v1.0/products", EXPECTED_RETURN_PRODUCT_ID)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(json))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(jsonPath("$.description", is("Testing add new product")))
+                .andExpect(jsonPath("$.name", is("New product")));
+    }
+
+    @DisplayName("I want to be able to update a product")
+    @Test
+    void shouldPurchaseDateError() throws Exception {
+        ProductDto dto = getGoCityProduct();
+        dto.setLastPurchasedDate(LocalDateTime.now().minus(1, ChronoUnit.YEARS));
+        String json = mapper.writeValueAsString(dto);
+        mvc.perform(post("/gocity/v1.0/products/{id}", EXPECTED_RETURN_PRODUCT_ID)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(json))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> assertEquals("Last purchase date cannot be before creation date.",
+                        result.getResolvedException() != null ? result.getResolvedException().getMessage() : "Unknown error returned"));
+
     }
 
     private ProductDto getGoCityProduct() {
@@ -128,8 +170,8 @@ class LeisurePassControllerTest extends GoCityServiceTestParent {
                 .creationDate(dateTime)
                 .name("GoCity Super Product")
                 .description("Gives super powers to the one drinks it")
-                .lastPurchasedDate(LocalDateTime.now())
-                .updatedDate(LocalDateTime.now())
+                .lastPurchasedDate(dateTime)
+                .updatedDate(dateTime)
                 .category(CategoryDto.builder().id(3)
                         .categoryName("test category")
                         .creationDate(dateTime)

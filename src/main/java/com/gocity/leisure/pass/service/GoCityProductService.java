@@ -64,6 +64,16 @@ public class GoCityProductService {
         Product product = getProduct(productDto);
         Optional<Category> category = categoryRepository.findById(productDto.getCategoryId());
         product.setCategory(category.orElseThrow(GoCityCategoryNotFoundException::new));
+        product.setCategoryId(category.orElseThrow(GoCityCategoryNotFoundException::new).getId());
+        Product savedProduct = productRepository.save(product);
+        return getDTo(savedProduct);
+    }
+
+    public ProductDto addProduct(final ProductDto productDto) {
+        Product product = getProduct(productDto);
+        Optional<Category> category = categoryRepository.findById(product.getCategory().getId());
+        product.setCategory(category.orElseThrow(GoCityCategoryNotFoundException::new));
+        product.setCategoryId(category.orElseThrow(GoCityCategoryNotFoundException::new).getId());
         Product savedProduct = productRepository.save(product);
         return getDTo(savedProduct);
     }
@@ -73,11 +83,14 @@ public class GoCityProductService {
     }
 
     private Product getProduct(ProductDto productDto) {
-        return new Product(String.valueOf(productDto.getId()),
+        String productId = productDto.getId() != null ? String.valueOf(productDto.getId()) : null;
+        Category category = new Category(productDto.getCategoryId(), "", null);
+        return new Product(productId,
                 productDto.getName(), productDto.getDescription(),
                 String.valueOf(productDto.getCategoryId()),
                 productDto.getCreationDate(),
-                LocalDateTime.now(), LocalDateTime.now());
+                LocalDateTime.now(), LocalDateTime.now(),
+                category);
 
     }
 
