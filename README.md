@@ -17,7 +17,7 @@ Download the application using github, the application can be accessed at the fo
 
 The application can be built with [Maven](https://maven.apache.org/download.cgi) and executed in your favourite ide.
 After the build, there will be an executable jar in the **gocity/target** directory that can be executed as follows:
-    java -jar target/gocity-0.0.1-SNAPSHOT.jar
+>    java -jar target/gocity-0.0.1-SNAPSHOT.jar
 
 ###### Startup
 
@@ -50,11 +50,11 @@ The following properties are set in the **applicatiion.properties** file:
 The database tables and Category data is loaded via [Flyway](https://flywaydb.org/)
 and is Flyway under version control.
 
-##Product data.
+## Product data.
 The product data, is loaded when the application starts up. The application.properties has the **loadFromFile**
 property to enable this. After the first execution of the application set this to false.
 
-the property can also be set on the command line
+the property can also be set on the command line with the '-D' prefix:
 > java -jar -DloadFromFile=false target/gocity-0.0.1-SNAPSHOT.jar
 
 The product data is loaded from the following file:
@@ -74,9 +74,8 @@ The product data is loaded from the following file:
   * As a user, I want to be able to delete a product
 ## Rest Apis
 
-The following apis are available, you can use postman or similar tool to exercise the Apis
-as Follows:
-prefix with http://localhost:port default port is 8080
+The following apis are available. You can use postman or similar tool to exercise the Apis as Follows:
+> prefix with http://localhost:port default port is 8080
 
 * Find all products: /gocity/v1.0/products
 * Delete product: /gocity/v1.0/products/{id}
